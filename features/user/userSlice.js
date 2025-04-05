@@ -1,25 +1,35 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios"; // Importing axios
-// ✅ Initial state should include users, loading, and error
+import axios from "axios";
+
 const initialState = {
   users: [],
   loading: false,
   error: "",
 };
 
-// ✅ createAsyncThunk using axios instead of fetch (since you're importing axios)
-export const fetchUsers = createAsyncThunk("users/fetchUsers", async (_, thunkAPI) => {
-  const response = await axios.get(
-    "https://jsonplaceholder.typicode.com/users"
-  );
-  return response.data;
-});
+// Async thunk to fetch users
+export const fetchUsers = createAsyncThunk(
+  "users/fetchUsers",
+  async (_, thunkAPI) => {
+    const response = await axios.get(
+      "https://jsonplaceholder.typicode.com/users"
+    );
+    return response.data;
+  }
+);
 
-// ✅ createSlice
+// userSlice definition
 const userSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    addUser: (state, action) => {
+      state.users.push(action.payload); // Adds a user to the list
+    },
+    removeUser: (state, action) => {
+      state.users = state.users.filter((user) => user.id !== action.payload); // Removes a user by id
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.pending, (state) => {
@@ -37,4 +47,7 @@ const userSlice = createSlice({
   },
 });
 
-export default userSlice.reducer; // Exporting the reducer
+// Exporting actions
+export const { addUser, removeUser } = userSlice.actions;
+
+export default userSlice.reducer;

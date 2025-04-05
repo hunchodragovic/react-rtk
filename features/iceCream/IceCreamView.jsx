@@ -1,12 +1,18 @@
+import { useDispatch, useSelector } from "react-redux";
+import { ordered, restocked } from "../../features/iceCream/iceCreamSlice"; // Importing ice cream actions from iceCreamSlice
+
 const IceCreamView = () => {
+  const dispatch = useDispatch();
+  const numOfIceCreams = useSelector((state) => state.iceCream.numOfIceCreams); // Selecting numOfIceCreams from the state
+
   return (
     <>
-      <h1>IceCream View</h1>
+      <h1>Ice Cream View</h1>
       <div>
-        <h2>Number of IceCreams: </h2>
+        <h2>Number of Ice Creams: {numOfIceCreams}</h2>
       </div>
-      <button>Order IceCream</button>
-      <button>Restock IceCream</button>
+      <button onClick={() => dispatch(ordered())}>Order Ice Cream</button>
+      <button onClick={() => dispatch(restocked(5))}>Restock Ice Cream</button>
     </>
   );
 };
